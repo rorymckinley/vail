@@ -1,7 +1,7 @@
 module Vail
   class Generator
-    def initialize
-      @config = Config.get_settings
+    def initialize(config)
+      @config = config
       Dot.class_variable_set(:@@duration, @config[:dot][:duration])
       Dot.class_variable_set(:@@pause, @config[:dot][:pause])
       Dash.class_variable_set(:@@duration, @config[:dash][:duration])
