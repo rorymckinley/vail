@@ -7,10 +7,12 @@ module Vail
       Dash.class_variable_set(:@@duration, @config[:dash][:duration])
       Dash.class_variable_set(:@@pause, @config[:dash][:pause])
     end
-    def to_morse(letter)
-      morse = Translate.to_morse(letter)
-      Beep::Sound.generate(morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }) 
-      sleep(@config[:letter][:pause].to_f/1000.0)
+    def to_morse(phrase)
+      phrase.each_char do |char|
+        morse = Translate.to_morse(char)
+        Beep::Sound.generate(morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }) 
+        sleep(@config[:letter][:pause].to_f/1000.0)
+      end
     end
   end
 end
