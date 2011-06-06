@@ -6,7 +6,8 @@ describe Vail::Generator do
       :dot => { :duration => 100, :pause => 200 },
       :dash => { :duration => 300, :pause => 400 },
       :frequency => 250,
-      :letter => { :pause => 100 }
+      :letter => { :pause => 100 },
+      :group => { :pause => 200 }
     }
   end
   it "should load config data on initialisation" do
@@ -46,7 +47,7 @@ describe Vail::Generator do
     Beep::Sound.should_receive(:generate)
 
     g = Vail::Generator.new
-    g.should_receive(:sleep).with(0.1)
+    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0)
     g.to_morse("G")
   end
 
@@ -69,8 +70,22 @@ describe Vail::Generator do
     Beep::Sound.should_receive(:generate).with(sound_parameters_O).ordered
 
     g = Vail::Generator.new
-    g.should_receive(:sleep).with(0.1).twice
+    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice
     g.to_morse("GO")
+  end
+
+  it "should pause between groups of words" do
+    Vail::Config.stub!(:get_settings).and_return(@settings)
+    Vail::Translate.stub!(:to_morse).with('G').and_return([Vail::Dash, Vail::Dash, Vail::Dot])
+    Vail::Translate.stub!(:to_morse).with('O').and_return([Vail::Dash, Vail::Dash, Vail::Dash])
+
+    Beep::Sound.stub!(:generate)
+
+    g = Vail::Generator.new
+    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
+    g.should_receive(:sleep).with(@settings[:group][:pause].to_f/1000.0).ordered
+    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
+    g.to_morse("GO GO")
   end
 end
 

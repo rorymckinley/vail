@@ -9,6 +9,11 @@ module Vail
     end
     def to_morse(phrase)
       phrase.each_char do |char|
+        if char == " "
+          sleep(@config[:group][:pause].to_f/1000.0)
+          next
+        end
+
         morse = Translate.to_morse(char)
         Beep::Sound.generate(morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }) 
         sleep(@config[:letter][:pause].to_f/1000.0)
