@@ -10,6 +10,7 @@ module Vail
     def to_morse(letter)
       morse = Translate.to_morse(letter)
       Beep::Sound.generate(morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }) 
+      sleep(@config[:letter][:pause].to_f/1000.0)
     end
   end
 end
