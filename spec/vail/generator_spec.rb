@@ -26,5 +26,17 @@ describe Vail::Generator do
 
     Vail::Generator.new.to_morse("T")
   end
+  it "should be able to geenrate morse for a letter that has a combination of dots and dashes" do
+    sound_parameters = [
+      { :duration => 300, :pause => 400, :frequency => 250 },
+      { :duration => 300, :pause => 400, :frequency => 250 },
+      { :duration => 100, :pause => 200, :frequency => 250 }
+    ]
+    Vail::Config.stub!(:get_settings).and_return(@settings)
+    Vail::Translate.should_receive(:to_morse).with('G').and_return([Vail::Dash, Vail::Dash, Vail::Dot])
+    Beep::Sound.should_receive(:generate).with(sound_parameters)
+
+    Vail::Generator.new.to_morse("G")
+  end
 end
 
