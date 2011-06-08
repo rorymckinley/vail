@@ -21,7 +21,7 @@ module Vail
         end
       end
 
-      @config[:repetitions].times.each do 
+      (@config[:repetitions].times.inject([]) { |r,i| r << instructions }).each do |instructions|
         instructions.each do |i|
           if i[:command] == :sound
             Beep::Sound.generate(i[:instruction])
