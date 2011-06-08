@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Vail::Generator do
-  before(:all) do
+  before(:each) do
     @settings = { 
       :dot => { :duration => 100, :pause => 200 },
       :dash => { :duration => 300, :pause => 400 },
@@ -75,6 +75,18 @@ describe Vail::Generator do
     g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
     g.should_receive(:sleep).with(@settings[:group][:pause].to_f/1000.0).ordered
     g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
+    g.to_morse("GO GO")
+  end
+
+  it "should allow a phrase to be repeated" do
+    Vail::Translate.stub!(:to_morse).with('G').and_return([Vail::Dash, Vail::Dash, Vail::Dot])
+    Vail::Translate.stub!(:to_morse).with('O').and_return([Vail::Dash, Vail::Dash, Vail::Dash])
+
+    Beep::Sound.stub!(:generate)
+
+    g = Vail::Generator.new(@settings.merge(:repetitions => 2))
+    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).exactly(8).times
+    g.should_receive(:sleep).with(@settings[:group][:pause].to_f/1000.0).twice
     g.to_morse("GO GO")
   end
 end

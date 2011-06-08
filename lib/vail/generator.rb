@@ -2,21 +2,33 @@ module Vail
   class Generator
     def initialize(config)
       @config = config
+      @config[:repetitions] ||= 1
       Dot.class_variable_set(:@@duration, @config[:dot][:duration])
       Dot.class_variable_set(:@@pause, @config[:dot][:pause])
       Dash.class_variable_set(:@@duration, @config[:dash][:duration])
       Dash.class_variable_set(:@@pause, @config[:dash][:pause])
     end
     def to_morse(phrase)
+      instructions = []
+
       phrase.each_char do |char|
         if char == " "
-          sleep(@config[:group][:pause].to_f/1000.0)
-          next
+          instructions << { :command => :sleep, :instruction => @config[:group][:pause].to_f/1000.0}
+        else
+          morse = Translate.to_morse(char)
+          instructions << { :command => :sound, :instruction => morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }}
+          instructions << { :command => :sleep, :instruction => @config[:letter][:pause].to_f/1000.0}
         end
+      end
 
-        morse = Translate.to_morse(char)
-        Beep::Sound.generate(morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }) 
-        sleep(@config[:letter][:pause].to_f/1000.0)
+      @config[:repetitions].times.each do 
+        instructions.each do |i|
+          if i[:command] == :sound
+            Beep::Sound.generate(i[:instruction])
+          else
+            sleep(i[:instruction])
+          end
+        end
       end
     end
   end
