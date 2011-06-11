@@ -9,6 +9,18 @@ module Vail
       Dash.class_variable_set(:@@pause, @config[:dash][:pause])
     end
     def to_morse(phrase)
+      instructions = build_instructions(phrase)
+
+      (@config[:repetitions].times.inject([]) { |r,i| r << instructions }).each do |instructions|
+        instructions.each do |i|
+          execute_instruction(i)
+        end
+      end
+    end
+
+    private
+
+    def build_instructions(phrase)
       instructions = []
 
       phrase.each_char do |char|
@@ -21,14 +33,14 @@ module Vail
         end
       end
 
-      (@config[:repetitions].times.inject([]) { |r,i| r << instructions }).each do |instructions|
-        instructions.each do |i|
-          if i[:command] == :sound
-            Beep::Sound.generate(i[:instruction])
-          else
-            sleep(i[:instruction])
-          end
-        end
+      instructions
+    end
+
+    def execute_instruction(instruction)
+      if instruction[:command] == :sound
+        Beep::Sound.generate(instruction[:instruction])
+      else
+        sleep(instruction[:instruction])
       end
     end
   end
