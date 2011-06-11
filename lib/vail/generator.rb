@@ -1,7 +1,8 @@
 module Vail
   class Generator
-    def initialize(config)
-      @config = config
+    def initialize(config={})
+      @config = config.empty? ? YAML.load(IO.read(ConfigPath)) : config
+
       @config[:repetitions] ||= 1
       Dot.class_variable_set(:@@duration, @config[:dot][:duration])
       Dot.class_variable_set(:@@pause, @config[:dot][:pause])

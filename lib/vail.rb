@@ -1,4 +1,10 @@
-require 'vail/config'
-require 'vail/dot_dash'
-require 'vail/translate'
-require 'vail/generator'
+require 'beep'
+require 'yaml'
+
+['vail/config', 'vail/dot_dash', 'vail/translate', 'vail/generator'].each do |f|
+  require File.join(File.dirname(__FILE__), f)
+end
+
+module Vail
+  ConfigPath = File.join(File.dirname(__FILE__), '..', 'config', 'default.yaml')
+end

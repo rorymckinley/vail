@@ -1,0 +1,11 @@
+dot:
+  duration: 100
+  pause: 100
+dash:
+  duration: 300
+  pause: 100
+letter:
+  pause: 350
+group:
+  pause: 500
+frequency: 250

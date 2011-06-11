@@ -10,6 +10,11 @@ describe Vail::Generator do
       :group => { :pause => 200 }
     }
   end
+  it "should load default settings upon initialisation if none are provided" do
+    IO.should_receive(:read).with(Vail::ConfigPath).and_return('blah')
+    YAML.should_receive(:load).with('blah').and_return(@settings)
+    Vail::Generator.new
+  end
   it "should generate the sound for a letter with a single dot" do
     Vail::Translate.should_receive(:to_morse).with('E').and_return([Vail::Dot])
     Beep::Sound.should_receive(:generate).with([{ :duration => 100, :pause => 200, :frequency => 250 }])
