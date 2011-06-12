@@ -1,6 +1,12 @@
 = vail
 
-Description goes here.
+vail converts text into audible Morse code. It currently uses the beep gem to interact with the PC speaker - so this means it is restricted to Linux distros that have the beep commandline utility available. 
+
+== Installation
+
+Due to vail's reliance on beep, prior to installing the vail gem (or running the executable after cloning the repo), you will need the beep utility to be installed. AFAIK, this would restrict usage to Linux distros or related systems that have the beep utility available. After that, it is as simple as:
+
+  gem install rails
 
 == Contributing to vail
  
