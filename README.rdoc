@@ -6,7 +6,31 @@ vail converts text into audible Morse code. It currently uses the beep gem to in
 
 Due to vail's reliance on beep, prior to installing the vail gem (or running the executable after cloning the repo), you will need the beep utility to be installed. AFAIK, this would restrict usage to Linux distros or related systems that have the beep utility available. After that, it is as simple as:
 
-  gem install rails
+  gem install vail
+
+== Usage - executable
+
+The vail executable can be run to output Morse code from the commandline. Executing is as simple as:
+
+  vail
+
+You will be prompted to enter the text and you sould be rewarded with a sequence of beeps representing the dots and dashes for the various letters. To exit, simply hit Ctrl-C.
+
+There are currently two commandline options available. These allow you to export the current default settings for the gem and import settings from a specified file.
+
+=== Export settings
+
+The settings are dumped as YAML, and the output can be redirected to a file of your choice to server as a template for a custom settings file:
+
+  vail -e > current_settings.yaml
+
+When the export parameter is provided, vail exits after outputting the settings.
+
+=== Importing settings
+
+Settings may be imported to override the default settings for the gem. An exported file may be used as a template for the import file. The settings imported will only be used for that execution of the binary and they will not permanently override the default settings. Currently, there is no user-friendly way to do this permanenently.
+
+  vail -i /path/to/custom/settings
 
 == Contributing to vail
  
