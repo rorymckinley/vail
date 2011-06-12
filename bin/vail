@@ -1,9 +1,20 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 require 'rubygems'
-require 'yaml'
+require 'trollop'
 require '../lib/vail'
 
-puts "Please enter the text for conversion:"
-text = gets.strip
-Vail::Generator.new.to_morse(text)
+opts = Trollop::options do
+  opt :export, "Output current default settings"
+  opt :import, "Run with settings in provided YAML file", :type => String
+end
+
+if opts[:export]
+  puts YAML::dump(Vail::Generator.new.settings)
+else
+  while true
+    puts "Please enter the text for conversion:"
+    text = gets.strip
+    Vail::Generator.new.to_morse(text)
+  end
+end
