@@ -94,5 +94,9 @@ describe Vail::Generator do
     g.should_receive(:sleep).with(@settings["group"]["pause"].to_f/1000.0).twice
     g.to_morse("GO GO")
   end
+
+  it "should be able to return the current settings object including any defaults applied" do
+    Vail::Generator.new(@settings).settings.should == @settings.merge("repetitions" => 1)
+  end
 end
 

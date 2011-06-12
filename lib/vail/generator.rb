@@ -5,12 +5,13 @@ module Vail
       
       @config = config.merge (
         {
-          Dot => { "duration" => config["dot"]["duration"], "pause" => config["dot"]["pause"]},
+          Dot => { "duration" => config["dot"]["duration"], "pause" => config["dot"]["pause"] },
           Dash => { "duration" => config["dash"]["duration"], "pause" => config["dash"]["pause"]}
         }
       )
       @config["repetitions"] ||= 1
     end
+
     def to_morse(phrase)
       instructions = build_instructions(phrase)
 
@@ -19,6 +20,10 @@ module Vail
           execute_instruction(i)
         end
       end
+    end
+
+    def settings
+      @config.reject { |key, value| [Dot,Dash].include? key }
     end
 
     private
