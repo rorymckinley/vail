@@ -4,4 +4,6 @@ require 'rubygems'
 require 'yaml'
 require '../lib/vail'
 
-Vail::Generator.new.to_morse('SOS')
+puts "Please enter the text for conversion:"
+text = gets.strip
+Vail::Generator.new.to_morse(text)
