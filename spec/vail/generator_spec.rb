@@ -3,11 +3,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Vail::Generator do
   before(:each) do
     @settings = { 
-      :dot => { :duration => 100, :pause => 200 },
-      :dash => { :duration => 300, :pause => 400 },
-      :frequency => 250,
-      :letter => { :pause => 100 },
-      :group => { :pause => 200 }
+      "dot" => { "duration" => 100, "pause" => 200 },
+      "dash" => { "duration" => 300, "pause" => 400 },
+      "frequency" => 250,
+      "letter" => { "pause" => 100 },
+      "group" => { "pause" => 200 }
     }
   end
   it "should load default settings upon initialisation if none are provided" do
@@ -44,7 +44,7 @@ describe Vail::Generator do
     Beep::Sound.should_receive(:generate)
 
     g = Vail::Generator.new(@settings)  
-    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0)
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0)
     g.to_morse("G")
   end
 
@@ -66,7 +66,7 @@ describe Vail::Generator do
     Beep::Sound.should_receive(:generate).with(sound_parameters_O).ordered
 
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice
     g.to_morse("GO")
   end
 
@@ -77,9 +77,9 @@ describe Vail::Generator do
     Beep::Sound.stub!(:generate)
 
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
-    g.should_receive(:sleep).with(@settings[:group][:pause].to_f/1000.0).ordered
-    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).twice.ordered
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice.ordered
+    g.should_receive(:sleep).with(@settings["group"]["pause"].to_f/1000.0).ordered
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice.ordered
     g.to_morse("GO GO")
   end
 
@@ -89,9 +89,9 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
-    g = Vail::Generator.new(@settings.merge(:repetitions => 2))
-    g.should_receive(:sleep).with(@settings[:letter][:pause].to_f/1000.0).exactly(8).times
-    g.should_receive(:sleep).with(@settings[:group][:pause].to_f/1000.0).twice
+    g = Vail::Generator.new(@settings.merge("repetitions" => 2))
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).exactly(8).times
+    g.should_receive(:sleep).with(@settings["group"]["pause"].to_f/1000.0).twice
     g.to_morse("GO GO")
   end
 end

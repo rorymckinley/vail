@@ -1,18 +1,21 @@
 module Vail
   class Generator
     def initialize(config={})
-      @config = config.empty? ? YAML.load(IO.read(ConfigPath)) : config
+      config = YAML.load(IO.read(ConfigPath)) if config.empty?
+      
+      @config = config.merge (
+        {
+        Dot => { "duration" => config["dot"]["duration"], "pause" => config["dot"]["pause"]},
+        Dash => { "duration" => config["dash"]["duration"], "pause" => config["dash"]["pause"]}
+      }
+      )
 
-      @config[:repetitions] ||= 1
-      Dot.class_variable_set(:@@duration, @config[:dot][:duration])
-      Dot.class_variable_set(:@@pause, @config[:dot][:pause])
-      Dash.class_variable_set(:@@duration, @config[:dash][:duration])
-      Dash.class_variable_set(:@@pause, @config[:dash][:pause])
+      @config["repetitions"] ||= 1
     end
     def to_morse(phrase)
-      instructions = build_instructions(phrase)
+      instruction_sets = build_instructions(phrase)
 
-      (@config[:repetitions].times.inject([]) { |r,i| r << instructions }).each do |instructions|
+      (@config["repetitions"].times.inject([]) { |r,i| r << instruction_sets }).each do |instructions|
         instructions.each do |i|
           execute_instruction(i)
         end
@@ -26,11 +29,11 @@ module Vail
 
       phrase.each_char do |char|
         if char == " "
-          instructions << { :command => :sleep, :instruction => @config[:group][:pause].to_f/1000.0}
+          instructions << { :command => :sleep, :instruction => @config["group"]["pause"].to_f/1000.0}
         else
           morse = Translate.to_morse(char)
-          instructions << { :command => :sound, :instruction => morse.map { |dotdash| dotdash.to_sound(@config[:frequency]) }}
-          instructions << { :command => :sleep, :instruction => @config[:letter][:pause].to_f/1000.0}
+          instructions << { :command => :sound, :instruction => morse.map { |dotdash| { :duration => @config[dotdash]["duration"], :pause => @config[dotdash]["pause"], :frequency => @config["frequency"] } }}
+          instructions << { :command => :sleep, :instruction => @config["letter"]["pause"].to_f/1000.0}
         end
       end
 
