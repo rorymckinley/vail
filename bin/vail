@@ -2,7 +2,7 @@
 # coding: utf-8
 require 'rubygems'
 require 'trollop'
-require '../lib/vail'
+require 'vail'
 
 trap("INT") do
   puts "\nExiting......."
