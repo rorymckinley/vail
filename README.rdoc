@@ -8,6 +8,13 @@ Due to vail's reliance on beep, prior to installing the vail gem (or running the
 
   gem install vail
 
+== Customisable Settings
+
+* duration - this can be set for a dot or a dash and the units are milliseconds
+* pause - this is the time in milliseconds that vail will pause for before proceeding to the next set of instructions, This can be applied to a dot, a dash, a letter or a group of letters (Vail uses spaces to distinguish groups of letters)
+* frequency - of the sound generated, in Hz. It is applied to both dots and dashes
+* repetitions - the number of times the provided string will be repeated
+
 == Usage - executable
 
 The vail executable can be run to output Morse code from the commandline. Executing is as simple as:
@@ -16,7 +23,9 @@ The vail executable can be run to output Morse code from the commandline. Execut
 
 You will be prompted to enter the text and you sould be rewarded with a sequence of beeps representing the dots and dashes for the various letters. To exit, simply hit Ctrl-C.
 
-There are currently two commandline options available. These allow you to export the current default settings for the gem and import settings from a specified file.
+There are currently two commandline options available. These allow you to export the current default settings for the gem and import settings from a specified file. A brief description of these two options can also be found by running:
+
+  vail --help
 
 === Export settings
 
@@ -28,9 +37,33 @@ When the export parameter is provided, vail exits after outputting the settings.
 
 === Importing settings
 
-Settings may be imported to override the default settings for the gem. An exported file may be used as a template for the import file. The settings imported will only be used for that execution of the binary and they will not permanently override the default settings. Currently, there is no user-friendly way to do this permanenently.
+Settings may be imported to override the default settings for the gem. An exported file may be used as a template for the import file. The settings imported will only be used for that execution of the binary and they will temporarily override the default settings. Currently, there is no user-friendly way to do this permanenently.
 
   vail -i /path/to/custom/settings
+
+== Usage - in Ruby code
+
+To use the vail module in Ruby code is reasonably simple - just bear in mind that it is subject to the same restrictions as the executable (linux only, requires the beep utility):
+
+  require 'rubygems'
+  require 'vail'
+
+  Vail::Generator.new.to_morse("E")
+
+=== Providing custom settings
+
+The default settings can be overridden by passing a hash of custom settings - in the code below, only the repetitions are optional. Excluding any of the other options will result in Vail puking horribly :)
+
+  @settings = { 
+    "dot" => { "duration" => 100, "pause" => 200 },
+    "dash" => { "duration" => 300, "pause" => 400 },
+    "frequency" => 250,
+    "letter" => { "pause" => 100 },
+    "group" => { "pause" => 200 }, 
+    "repetitions" => 2
+  }
+
+  Vail::Generator.new(@settings).to_morse("T")
 
 == Contributing to vail
  
