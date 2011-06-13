@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "vail"
   gem.homepage = "http://github.com/rorymckinley/vail"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A simple gem to generate audible morse code}
+  gem.description = %Q{Vail generates audible morse code. Currently it only works on Linux distros that have hte beep utility installed. This is hopefully a temporary limitation}
   gem.email = "rorymckinley@gmail.com"
   gem.authors = ["Rory McKinley"]
   # dependencies defined in Gemfile
