@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vail}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rory McKinley"]
-  s.date = %q{2011-06-13}
+  s.date = %q{2011-06-14}
   s.default_executable = %q{vail}
   s.description = %q{Vail generates audible morse code. Currently it only works on Linux distros that have the beep utility installed. This is hopefully a temporary limitation}
   s.email = %q{rorymckinley@gmail.com}
