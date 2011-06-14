@@ -26,7 +26,17 @@ module Vail
       "w" => [Dot, Dash, Dash],
       "x" => [Dash, Dot, Dot, Dash],
       "y" => [Dash, Dot, Dash, Dash],
-      "z" => [Dash, Dash, Dot, Dot]
+      "z" => [Dash, Dash, Dot, Dot],
+      "0" => [Dash,Dash,Dash,Dash,Dash],
+      "1" => [Dot, Dash, Dash, Dash, Dash],
+      "2" => [Dot, Dot, Dash, Dash, Dash],
+      "3" => [Dot, Dot, Dot, Dash, Dash],
+      "4" => [Dot, Dot, Dot, Dot, Dash],
+      "5" => [Dot, Dot, Dot, Dot, Dot],
+      "6" => [Dash, Dot, Dot, Dot, Dot],
+      "7" => [Dash, Dash, Dot, Dot, Dot], 
+      "8" => [Dash, Dash, Dash, Dot, Dot],
+      "9" => [Dash, Dash, Dash, Dash, Dot]
     }
     def self.to_morse(letter)
       Morse[letter.downcase] || []

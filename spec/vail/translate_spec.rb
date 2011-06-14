@@ -11,4 +11,9 @@ describe Vail::Translate do
       Vail::Translate.to_morse(l).should_not be_empty
     end
   end
+  it "should return morse representations of digits" do
+    (0..9).each do |n|
+      Vail::Translate.to_morse(n.to_s).should_not be_empty
+    end
+  end
 end
