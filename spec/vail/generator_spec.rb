@@ -89,14 +89,21 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
-    g = Vail::Generator.new(@settings.merge("repetitions" => 2))
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).exactly(8).times
-    g.should_receive(:sleep).with(@settings["group"]["pause"].to_f/1000.0).twice
+    settings = @settings.merge("repetitions" => { 'repeat' => 1, 'pause' => 800 })
+
+    g = Vail::Generator.new(settings)
+    g.should_receive(:sleep).with(settings["letter"]["pause"].to_f/1000.0).exactly(8).times
+    g.should_receive(:sleep).with(settings["group"]["pause"].to_f/1000.0).twice
+    g.should_receive(:sleep).with(settings["repetitions"]["pause"].to_f/1000.0)
     g.to_morse("GO GO")
   end
 
+  it "should accept a scalar value (old settings format) for the repetitions settings key and set a default repetition pause" do
+    Vail::Generator.new(@settings.merge("repetitions" => 5)).settings.should == @settings.merge({"repetitions" => { "repeat" => 4, "pause" => 800}})
+  end
+
   it "should be able to return the current settings object including any defaults applied" do
-    Vail::Generator.new(@settings).settings.should == @settings.merge("repetitions" => 1)
+    Vail::Generator.new(@settings).settings.should == @settings.merge("repetitions" => { "repeat" => 0, "pause" => 800})
   end
 end
 

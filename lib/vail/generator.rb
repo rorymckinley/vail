@@ -9,13 +9,31 @@ module Vail
           Dash => { "duration" => config["dash"]["duration"], "pause" => config["dash"]["pause"]}
         }
       )
+
+      @config.merge! (
+        case @config["repetitions"]
+        when Hash
+          {}
+        when Fixnum
+          { "repetitions" => { "repeat" => (@config["repetitions"] - 1), "pause" => 800 } }
+        when NilClass
+          { "repetitions" => { "repeat" => 0, "pause" => 800 } }
+        end
+      )
       @config["repetitions"] ||= 1
     end
 
     def to_morse(phrase)
       instructions = build_instructions(phrase)
 
-      (@config["repetitions"].times.inject([]) { |r,i| r << instructions }).each do |instruction_set|
+      # Add a repetition pause to all but the last repeat
+      repeated_instructions = (@config["repetitions"]["repeat"]).times.inject([]) do 
+        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
+      end
+
+      repeated_instructions << instructions
+
+      (repeated_instructions).each do |instruction_set|
         instruction_set.each do |i|
           execute_instruction(i)
         end
