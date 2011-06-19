@@ -12,6 +12,7 @@ end
 opts = Trollop::options do
   opt :export, "Output current default settings"
   opt :import, "Run with settings in provided YAML file", :type => String
+  opt :text, "File containing text for conversion to morse", :type => String
 end
 
 if opts[:export]
@@ -21,9 +22,20 @@ else
 
   settings = opts[:import] ? YAML::load(IO.read(opts[:import])) : {}
 
-  while true
-    puts "Please enter the text for conversion:"
-    text = gets.strip
-    Vail::Generator.new(settings).to_morse(text)
+  generator = Vail::Generator.new(settings)
+
+  if opts[:text]
+    f = File.new(opts[:text], 'r')
+    while !f.eof?
+      text = f.gets("\n").strip
+      puts text
+      generator.to_morse(text)
+    end
+  else
+    while true
+      puts "Please enter the text for conversion:"
+      text = gets.strip
+      generator.to_morse(text)
+    end
   end
 end
