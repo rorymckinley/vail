@@ -20,7 +20,6 @@ module Vail
           { "repetitions" => { "repeat" => 0, "pause" => 800 } }
         end
       )
-      @config["repetitions"] ||= 1
     end
 
     def to_morse(phrase)
