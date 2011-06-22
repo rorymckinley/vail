@@ -11,7 +11,7 @@ Due to vail's reliance on beep, prior to installing the vail gem (or running the
 == Customisable Settings
 
 * duration - this can be set for a dot or a dash and the units are milliseconds
-* pause - this is the time in milliseconds that vail will pause for before proceeding to the next set of instructions, This can be applied to a dot, a dash, a letter or a group of letters (Vail uses spaces to distinguish groups of letters)
+* pause - this is the time in milliseconds that vail will pause for before proceeding to the next set of instructions, This can be applied to a dot, a dash, a letter or a group of letters (Vail uses spaces to distinguish groups of letters) or between repetitions
 * frequency - of the sound generated, in Hz. It is applied to both dots and dashes
 * repetitions - the number of times the provided string will be repeated
 
@@ -23,9 +23,11 @@ The vail executable can be run to output Morse code from the commandline. Execut
 
 You will be prompted to enter the text and you sould be rewarded with a sequence of beeps representing the dots and dashes for the various letters. To exit, simply hit Ctrl-C.
 
-There are currently two commandline options available. These allow you to export the current default settings for the gem and import settings from a specified file. A brief description of these two options can also be found by running:
-
-  vail --help
+The following options can be passed when running the executable from the commandline:
+* --export, -e : Export settings
+* --import, -i : Import settings
+* --text, -t : Load a file containing text to be converted to Morse
+* --help, -h : Help 
 
 === Export settings
 
