@@ -43,6 +43,10 @@ Settings may be imported to override the default settings for the gem. An export
 
   vail -i /path/to/custom/settings
 
+=== Load text from file
+
+Text can be loaded from a file and then converted into Morse. vail will treat each line as a seperate set of instructions. Therefore if repeptitions have been applied each line will be repeated for the given number of repetitions before proceeding on to the next line.
+
 == Usage - in Ruby code
 
 To use the vail module in Ruby code is reasonably simple - just bear in mind that it is subject to the same restrictions as the executable (linux only, requires the beep utility):
@@ -54,7 +58,7 @@ To use the vail module in Ruby code is reasonably simple - just bear in mind tha
 
 === Providing custom settings
 
-The default settings can be overridden by passing a hash of custom settings - in the code below, only the repetitions are optional. Excluding any of the other options will result in Vail puking horribly :)
+The default settings can be overridden by passing a hash of custom settings - in the code below, only the repetitions element is optional. Excluding any of the other options will result in Vail puking horribly :)
 
   @settings = { 
     "dot" => { "duration" => 100, "pause" => 200 },
@@ -62,10 +66,12 @@ The default settings can be overridden by passing a hash of custom settings - in
     "frequency" => 250,
     "letter" => { "pause" => 100 },
     "group" => { "pause" => 200 }, 
-    "repetitions" => 2
+    "repetitions" =>  { "pause" => 800, "repeat" => 2 }
   }
 
   Vail::Generator.new(@settings).to_morse("T")
+
+If the value of @settings["repetitions"]["repeat"] is 0, vail will run through the text provided once.
 
 == Contributing to vail
  
