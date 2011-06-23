@@ -47,6 +47,8 @@ Settings may be imported to override the default settings for the gem. An export
 
 Text can be loaded from a file and then converted into Morse. vail will treat each line as a seperate set of instructions. Therefore if repeptitions have been applied each line will be repeated for the given number of repetitions before proceeding on to the next line.
 
+  vail -t /path/to/input/file
+
 == Usage - in Ruby code
 
 To use the vail module in Ruby code is reasonably simple - just bear in mind that it is subject to the same restrictions as the executable (linux only, requires the beep utility):
@@ -71,7 +73,7 @@ The default settings can be overridden by passing a hash of custom settings - in
 
   Vail::Generator.new(@settings).to_morse("T")
 
-If the value of @settings["repetitions"]["repeat"] is 0, vail will run through the text provided once.
+If the value of @settings["repetitions"]["repeat"] is 0, vail will run through the text provided once. In addition, to allow backwards compatibility, vail will allow the repetitions element to be an integer. In this case, due to poor reasoning by the developer :), the number of repetitions is the total number of times it will run (repetitions => 1 means it will run once) - so, far better to go with the new settings format if you can.
 
 == Contributing to vail
  
