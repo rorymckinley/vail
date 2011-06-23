@@ -41,18 +41,10 @@ module Vail
 
       # the last line does not get a line pause - so handle it first
       
-      instructions = build_instructions(lines.pop)
-
-      last_line = repeat instructions
+      last_line = repeat(build_instructions(lines.pop))
 
       lines.inject([]) do |store,line|
-        instructions = build_instructions(line)
-
-        current_line = repeat instructions
-
-        current_line << [{ :command => :sleep, :instruction => @config["line"]["pause"].to_f/1000.0}]
-
-        store + current_line
+        store + (repeat(build_instructions(line)) << [{ :command => :sleep, :instruction => @config["line"]["pause"].to_f/1000.0}])
       end + last_line
     end
 
@@ -76,7 +68,7 @@ module Vail
     end
 
     def repeat(instructions)
-      # Add a repetition pause for the repeats
+      # Add a repetition pause for the repeats only
       (@config["repetitions"]["repeat"]).times.inject([]) do 
         |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
       end << instructions
