@@ -43,28 +43,17 @@ module Vail
       
       instructions = build_instructions(lines.pop)
 
-      # Add a repetition pause to all but the last repeat
-      last_line = (@config["repetitions"]["repeat"]).times.inject([]) do 
-        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
-      end
+      last_line = repeat instructions
 
-      last_line << instructions
-
-      preceding_lines = lines.inject([]) do |store,line|
+      lines.inject([]) do |store,line|
         instructions = build_instructions(line)
 
-        # Add a repetition pause to all but the last repeat
-        current_line = (@config["repetitions"]["repeat"]).times.inject([]) do 
-          |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
-        end
+        current_line = repeat instructions
 
-        current_line << instructions
         current_line << [{ :command => :sleep, :instruction => @config["line"]["pause"].to_f/1000.0}]
 
         store + current_line
-      end
-
-      preceding_lines + last_line
+      end + last_line
     end
 
     def build_instructions(phrase)
@@ -84,6 +73,13 @@ module Vail
       end
 
       instructions
+    end
+
+    def repeat(instructions)
+      # Add a repetition pause for the repeats
+      (@config["repetitions"]["repeat"]).times.inject([]) do 
+        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
+      end << instructions
     end
 
     def execute_instruction(instruction)
