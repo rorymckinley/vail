@@ -7,7 +7,8 @@ describe Vail::Generator do
       "dash" => { "duration" => 300, "pause" => 400 },
       "frequency" => 250,
       "letter" => { "pause" => 100 },
-      "group" => { "pause" => 200 }
+      "group" => { "pause" => 200 }, 
+      "line" => { "pause" => 400 }
     }
   end
   it "should load default settings upon initialisation if none are provided" do
@@ -104,6 +105,18 @@ describe Vail::Generator do
 
   it "should be able to return the current settings object including any defaults applied" do
     Vail::Generator.new(@settings).settings.should == @settings.merge("repetitions" => { "repeat" => 0, "pause" => 800})
+  end
+
+  it "should split input text on newlines and treat each newline as a separate set of instructions with defined pause between each set" do
+    Vail::Translate.should_receive(:to_morse).with("G").twice.and_return([Vail::Dash, Vail::Dash, Vail::Dot])
+    Vail::Translate.should_receive(:to_morse).with('O').twice.and_return([Vail::Dash, Vail::Dash, Vail::Dash])
+
+    Beep::Sound.stub!(:generate)
+
+    g = Vail::Generator.new(@settings)
+    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).exactly(4).times
+    g.should_receive(:sleep).with(@settings["line"]["pause"].to_f/1000.0)
+    g.to_morse("GO\nGO\n")
   end
 end
 

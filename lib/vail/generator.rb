@@ -22,17 +22,8 @@ module Vail
       )
     end
 
-    def to_morse(phrase)
-      instructions = build_instructions(phrase)
-
-      # Add a repetition pause to all but the last repeat
-      repeated_instructions = (@config["repetitions"]["repeat"]).times.inject([]) do 
-        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
-      end
-
-      repeated_instructions << instructions
-
-      (repeated_instructions).each do |instruction_set|
+    def to_morse(text)
+      convert_to_instructions(text).each do |instruction_set|
         instruction_set.each do |i|
           execute_instruction(i)
         end
@@ -44,6 +35,37 @@ module Vail
     end
 
     private
+
+    def convert_to_instructions(text)
+      lines = text.split("\n")
+
+      # the last line does not get a line pause - so handle it first
+      
+      instructions = build_instructions(lines.pop)
+
+      # Add a repetition pause to all but the last repeat
+      last_line = (@config["repetitions"]["repeat"]).times.inject([]) do 
+        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
+      end
+
+      last_line << instructions
+
+      preceding_lines = lines.inject([]) do |store,line|
+        instructions = build_instructions(line)
+
+        # Add a repetition pause to all but the last repeat
+        current_line = (@config["repetitions"]["repeat"]).times.inject([]) do 
+          |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
+        end
+
+        current_line << instructions
+        current_line << [{ :command => :sleep, :instruction => @config["line"]["pause"].to_f/1000.0}]
+
+        store + current_line
+      end
+
+      preceding_lines + last_line
+    end
 
     def build_instructions(phrase)
       instructions = []
