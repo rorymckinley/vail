@@ -67,7 +67,7 @@ module Vail
     def repeat(instructions)
       # Add a repetition pause for the repeats only
       (@config["repetitions"]["repeat"]).times.inject([]) do 
-        |r,i| r << (instructions +[{ :command => :sleep, :instruction => @config["repetitions"]["pause"].to_f/1000.0}])
+        |r,i| r << (instructions +[Command::Pause.new("repetitions")])
       end << instructions
     end
 

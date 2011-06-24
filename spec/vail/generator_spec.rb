@@ -95,14 +95,21 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
-    @mock_pause.should_receive(:execute).exactly(10).times
+    @mock_pause.should_receive(:execute).exactly(8).times
+
+    mock_pause_group = double(Vail::Command::Pause)
+    mock_pause_group.should_receive(:execute).twice
+
+    mock_pause_rep = double(Vail::Command::Pause)
+    mock_pause_rep.should_receive(:execute)
+
     Vail::Command::Pause.should_receive(:new).with('letter').exactly(4).times.and_return(@mock_pause)
-    Vail::Command::Pause.should_receive(:new).with('group').and_return(@mock_pause)
+    Vail::Command::Pause.should_receive(:new).with('group').and_return(mock_pause_group)
+    Vail::Command::Pause.should_receive(:new).with('repetitions').and_return(mock_pause_rep)
 
     settings = @settings.merge("repetitions" => { 'repeat' => 1, 'pause' => 800 })
 
     g = Vail::Generator.new(settings)
-    g.should_receive(:sleep).with(settings["repetitions"]["pause"].to_f/1000.0)
     g.to_morse("GO GO")
   end
 
