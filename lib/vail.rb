@@ -1,7 +1,7 @@
 require 'beep'
 require 'yaml'
 
-['vail/config', 'vail/dot_dash', 'vail/translate', 'vail/generator'].each do |f|
+['vail/config', 'vail/dot_dash', 'vail/translate', 'vail/generator', 'vail/command/sound'].each do |f|
   require File.join(File.dirname(__FILE__), f)
 end
 
