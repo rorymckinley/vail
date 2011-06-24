@@ -53,7 +53,7 @@ module Vail
 
       phrase.each_char do |char|
         if char == " "
-          instructions << { :command => :sleep, :instruction => @config["group"]["pause"].to_f/1000.0}
+          instructions << Command::Pause.new('group')
         else
           morse = Translate.to_morse(char)
           instructions << Command::Sound.new(morse)
