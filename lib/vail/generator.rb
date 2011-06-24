@@ -57,10 +57,6 @@ module Vail
         else
           morse = Translate.to_morse(char)
           instructions << Command::Sound.new(morse)
-          # instructions << { 
-          #   :command => :sound, 
-          #   :instruction => morse.map { |dotdash| { :duration => @config[dotdash]["duration"], :pause => @config[dotdash]["pause"], :frequency => @config["frequency"] }}
-          # }
           instructions << { :command => :sleep, :instruction => @config["letter"]["pause"].to_f/1000.0}
         end
       end
@@ -81,11 +77,6 @@ module Vail
       else
         instruction.execute(@config)
       end
-
-      # if instruction[:command] == :sound
-      #   Beep::Sound.generate(instruction[:instruction])
-      # else
-      # end
     end
   end
 end
