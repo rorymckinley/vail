@@ -10,6 +10,7 @@ describe Vail::Generator do
       "group" => { "pause" => 200 }, 
       "line" => { "pause" => 400 }
     }
+    @mock_pause = double(Vail::Command::Pause)
   end
   it "should load default settings upon initialisation if none are provided" do
     IO.should_receive(:read).with(Vail::ConfigPath).and_return('blah')
@@ -42,10 +43,11 @@ describe Vail::Generator do
 
   it "should provide an additional pause after a letter is completed" do
     Vail::Translate.stub!(:to_morse).and_return([Vail::Dash, Vail::Dash, Vail::Dot])
+
     Beep::Sound.should_receive(:generate)
 
     g = Vail::Generator.new(@settings)  
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0)
+    Vail::Command::Pause.any_instance.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0)
     g.to_morse("G")
   end
 
@@ -63,11 +65,13 @@ describe Vail::Generator do
     Vail::Translate.stub!(:to_morse).with('G').and_return([Vail::Dash, Vail::Dash, Vail::Dot])
     Vail::Translate.stub!(:to_morse).with('O').and_return([Vail::Dash, Vail::Dash, Vail::Dash])
 
+    @mock_pause.should_receive(:execute).twice
+    Vail::Command::Pause.should_receive(:new).with('letter').twice.and_return(@mock_pause)
+
     Beep::Sound.should_receive(:generate).with(sound_parameters_G).ordered
     Beep::Sound.should_receive(:generate).with(sound_parameters_O).ordered
 
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice
     g.to_morse("GO")
   end
 
@@ -77,10 +81,11 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
+    @mock_pause.should_receive(:execute).exactly(4).times
+    Vail::Command::Pause.should_receive(:new).with('letter').exactly(4).times.and_return(@mock_pause)
+
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice.ordered
     g.should_receive(:sleep).with(@settings["group"]["pause"].to_f/1000.0).ordered
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).twice.ordered
     g.to_morse("GO GO")
   end
 
@@ -90,10 +95,12 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
+    @mock_pause.should_receive(:execute).exactly(8).times
+    Vail::Command::Pause.should_receive(:new).with('letter').exactly(4).times.and_return(@mock_pause)
+
     settings = @settings.merge("repetitions" => { 'repeat' => 1, 'pause' => 800 })
 
     g = Vail::Generator.new(settings)
-    g.should_receive(:sleep).with(settings["letter"]["pause"].to_f/1000.0).exactly(8).times
     g.should_receive(:sleep).with(settings["group"]["pause"].to_f/1000.0).twice
     g.should_receive(:sleep).with(settings["repetitions"]["pause"].to_f/1000.0)
     g.to_morse("GO GO")
@@ -113,8 +120,10 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
+    @mock_pause.should_receive(:execute).exactly(4).times
+    Vail::Command::Pause.should_receive(:new).with('letter').exactly(4).times.and_return(@mock_pause)
+
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings["letter"]["pause"].to_f/1000.0).exactly(4).times
     g.should_receive(:sleep).with(@settings["line"]["pause"].to_f/1000.0)
     g.to_morse("GO\nGO\n")
   end

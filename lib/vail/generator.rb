@@ -57,7 +57,7 @@ module Vail
         else
           morse = Translate.to_morse(char)
           instructions << Command::Sound.new(morse)
-          instructions << { :command => :sleep, :instruction => @config["letter"]["pause"].to_f/1000.0}
+          instructions << Command::Pause.new('letter')
         end
       end
 
