@@ -25,12 +25,7 @@ else
   generator = Vail::Generator.new(settings)
 
   if opts[:text]
-    f = File.new(opts[:text], 'r')
-    while !f.eof?
-      text = f.gets("\n").strip
-      puts text
-      generator.to_morse(text)
-    end
+    generator.to_morse(IO.read(opts[:text]))
   else
     while true
       puts "Please enter the text for conversion:"
