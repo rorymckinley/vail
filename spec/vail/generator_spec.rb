@@ -127,11 +127,11 @@ describe Vail::Generator do
 
     Beep::Sound.stub!(:generate)
 
-    @mock_pause.should_receive(:execute).exactly(4).times
+    @mock_pause.should_receive(:execute).exactly(5).times
     Vail::Command::Pause.should_receive(:new).with('letter').exactly(4).times.and_return(@mock_pause)
+    Vail::Command::Pause.should_receive(:new).with('line').and_return(@mock_pause)
 
     g = Vail::Generator.new(@settings)
-    g.should_receive(:sleep).with(@settings["line"]["pause"].to_f/1000.0)
     g.to_morse("GO\nGO\n")
   end
 end

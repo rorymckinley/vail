@@ -44,7 +44,7 @@ module Vail
       last_line = repeat(build_instructions(lines.pop))
 
       lines.inject([]) do |store,line|
-        store + (repeat(build_instructions(line)) << [{ :command => :sleep, :instruction => @config["line"]["pause"].to_f/1000.0}])
+        store + (repeat(build_instructions(line)) << [Command::Pause.new('line')])
       end + last_line
     end
 
