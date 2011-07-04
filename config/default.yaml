@@ -8,4 +8,6 @@ letter:
   pause: 350
 group:
   pause: 500
+line:
+  pause: 1000
 frequency: 250
